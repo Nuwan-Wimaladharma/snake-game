@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="369.0" prefWidth="534.0" stylesheets="@../css/StartMenuViewStyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.game.controller.StartMenuViewController">
+   <children>
+      <Label alignment="CENTER" layoutX="14.0" layoutY="32.0" prefHeight="36.0" prefWidth="490.0" text="Welcome to the Snake Game" textFill="#2208e1" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+      </Label>
+      <HBox layoutX="29.0" layoutY="84.0" prefHeight="36.0" prefWidth="505.0" spacing="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+         <children>
+            <Label prefHeight="36.0" prefWidth="188.0" text="Enter Your Name :" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtName" maxWidth="1.7976931348623157E308" prefHeight="36.0" prefWidth="294.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="14.0" layoutY="153.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+         <children>
+            <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/game.png" />
+               </image>
+            </ImageView>
+            <VBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Button fx:id="btnStartGame" mnemonicParsing="false" onAction="#btnStartGameOnAction" prefHeight="39.0" prefWidth="290.0" text="START GAME">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnViewHighScores" mnemonicParsing="false" onAction="#btnViewHighScoresOnAction" prefHeight="39.0" prefWidth="290.0" text="VIEW HIGH SCORES">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnQuitGame" mnemonicParsing="false" onAction="#btnQuitGameOnAction" prefHeight="39.0" prefWidth="290.0" text="QUIT GAME">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

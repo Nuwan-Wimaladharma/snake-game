@@ -1,0 +1,30 @@
+#txtName{
+    -fx-background-radius: 15px;
+}
+#btnStartGame{
+    -fx-background-color: rgba(0, 128, 0, 0.9);
+    -fx-text-fill: white;
+    -fx-background-radius: 15px;
+}
+#btnStartGame:hover{
+    -fx-background-color: rgba(0, 128, 0, 0.7);
+    -fx-cursor: hand;
+}
+#btnViewHighScores{
+    -fx-background-color: rgba(0, 0, 255, 0.9);
+    -fx-text-fill: white;
+    -fx-background-radius: 15px;
+}
+#btnViewHighScores:hover{
+    -fx-background-color: rgba(0, 0, 255, 0.7);
+    -fx-cursor: hand;
+}
+#btnQuitGame{
+    -fx-background-color: rgba(255, 0, 0, 0.9);
+    -fx-text-fill: white;
+    -fx-background-radius: 15px;
+}
+#btnQuitGame:hover{
+    -fx-background-color: rgba(255, 0, 0, 0.7);
+    -fx-cursor: hand;
+}
