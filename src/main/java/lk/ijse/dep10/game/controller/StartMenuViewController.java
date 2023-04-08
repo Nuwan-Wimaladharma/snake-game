@@ -36,7 +36,33 @@ public class StartMenuViewController {
 
     @FXML
     void btnStartGameOnAction(ActionEvent event) {
+        if (txtName.getText().trim().isEmpty()){
+            new Alert(Alert.AlertType.ERROR,"Please add your name before play the game, try again...!").showAndWait();
+            return;
+        }
+        try {
+            URL fxmlFile = getClass().getResource("/view/NewGameView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxmlFile);
+            AnchorPane root = fxmlLoader.load();
 
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setTitle("Game");
+            stage.setScene(scene);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(btnStartGame.getScene().getWindow());
+            stage.show();
+            stage.centerOnScreen();
+            stage.setResizable(false);
+
+            NewGameViewController controller = fxmlLoader.getController();
+            String playerName = txtName.getText().trim();
+            controller.getPlayerName(playerName);
+
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR,"Failed to load NewGameView.fxml, try again...!").showAndWait();
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
