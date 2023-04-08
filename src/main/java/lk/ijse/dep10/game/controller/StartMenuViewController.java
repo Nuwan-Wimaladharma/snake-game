@@ -1,5 +1,6 @@
 package lk.ijse.dep10.game.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,7 +22,6 @@ public class StartMenuViewController {
 
     @FXML
     void btnQuitGameOnAction(ActionEvent event) {
-
     }
 
     @FXML

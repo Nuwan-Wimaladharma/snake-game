@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -20,16 +21,23 @@ public class AppInitializer extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        URL fxmlFile = getClass().getResource("/view/StartMenuView.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxmlFile);
-        AnchorPane root = fxmlLoader.load();
+    public void start(Stage primaryStage) {
+        try {
+            URL fxmlFile = getClass().getResource("/view/StartMenuView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxmlFile);
+            AnchorPane root = fxmlLoader.load();
 
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Snake Game");
-        primaryStage.show();
-        primaryStage.centerOnScreen();
-        primaryStage.setResizable(false);
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Snake Game");
+            primaryStage.show();
+            primaryStage.centerOnScreen();
+            primaryStage.setResizable(false);
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR,"Failed to load StartMenuView.fxml, try again...!").showAndWait();
+            throw new RuntimeException(e);
+        }
+
+
     }
 }
