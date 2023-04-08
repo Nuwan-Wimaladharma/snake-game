@@ -22,6 +22,7 @@ public class StartMenuViewController {
 
     @FXML
     void btnQuitGameOnAction(ActionEvent event) {
+        Platform.exit();
     }
 
     @FXML
