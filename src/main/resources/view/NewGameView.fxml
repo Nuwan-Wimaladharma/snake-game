@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -8,8 +9,8 @@
 
 <AnchorPane fx:id="root" onKeyPressed="#rootOnKeyPressed" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.game.controller.NewGameViewController">
    <children>
-      <Separator layoutY="730.0" prefHeight="1.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-      <HBox layoutX="14.0" layoutY="743.0" prefHeight="40.0" prefWidth="771.0" spacing="50.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+      <Separator layoutY="740.0" prefHeight="0.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <HBox layoutX="20.0" layoutY="746.0" prefHeight="40.0" prefWidth="771.0" spacing="50.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
          <children>
             <Label fx:id="txtPlayer" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="353.0" text="Player :" HBox.hgrow="ALWAYS">
                <font>
@@ -23,5 +24,6 @@
             </Label>
          </children>
       </HBox>
+      <Canvas fx:id="cnvGame" height="740.0" width="800.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

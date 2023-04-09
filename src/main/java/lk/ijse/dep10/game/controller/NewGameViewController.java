@@ -5,19 +5,15 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.fxml.FXMLLoader;;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -27,6 +23,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static javafx.scene.paint.Color.*;
@@ -36,34 +33,22 @@ public class NewGameViewController {
     public AnchorPane root;
     public Label txtScore;
     public Label txtPlayer;
+    public Canvas cnvGame;
     @FXML
     private String playerName;
     private static final int WIDTH = 800;
-    private static final int HEIGHT = 730;
-    private static final int FOOD_RADIUS = 5;
-    private static final int SNAKE_HEAD = 8;
-    private static final int STEP = 5;
-    private static final int ROWS = 40;
-    private static final int COLUMNS = ROWS;
-    private static final int SQUARE_SIZE = WIDTH / ROWS;
-    private static final String[] FOOD_IMAGES = new String[]{"/img/egg.png","/img/easter-egg.png"};
-    private static final int RIGHT = 0;
-    private static final int LEFT = 1;
-    private static final int UP = 2;
-    private static final int DOWN = 3;
-    private GraphicsContext gc;
-    private ArrayList<Point> snakeBody = new ArrayList<>();
-    private Point snakeHead;
-    private Image foodImage;
-    private int foodX;
-    private int foodY;
-    private boolean gameOver;
-    private Circle food;
-    private Circle snake;
+    private static final int HEIGHT = 740;
+    private static final int CELL_SIZE = 20;
+    private static final int X_BOUND = WIDTH / CELL_SIZE;
+    private static final int Y_BOUND = HEIGHT / CELL_SIZE;
     private Direction currectDirection;
     private Timeline timeline;
-    private int currentPosX;
-    private int currentPosY;
+    private List<Point> snakeBody = new ArrayList<>();
+    private List<Point> food = new ArrayList<>();
+    private Point snakeHead;
+    private Point currentFood;
+    private GraphicsContext gc;
+    private int score = 0;
 
     public void getPlayerName(String name){
         playerName = name;
@@ -71,112 +56,119 @@ public class NewGameViewController {
     public void initialize(){
         Platform.runLater(() -> {
             txtPlayer.setText("Player : " + playerName);
-            newFood();
-            newSnake();
-            root.getScene().addEventFilter(KeyEvent.KEY_PRESSED,event -> {
-                KeyCode code = event.getCode();
-                if (code == KeyCode.UP && currectDirection != Direction.DOWN){
-                    if (timeline != null){
-                        timeline.stop();
-                    }
-                    currectDirection = Direction.UP;
-                    KeyFrame key = new KeyFrame(Duration.millis(50), event2 -> {
-                        snake.setCenterY(snake.getCenterY() - STEP);
-                        currentPosX = (int) snake.getCenterX();
-                        currentPosY = (int) snake.getCenterY();
-                        if (gameOverBeyondBoundary()){
-                            timeline.stop();
-                            Stage closeStage = (Stage) root.getScene().getWindow();
-                            closeStage.close();
-                            openGameOverView();
-                        }
-                    });
-                    timeline = new Timeline(key);
-                    timeline.setCycleCount(Animation.INDEFINITE);
-                    timeline.playFromStart();
-                }
-                else if (code == KeyCode.DOWN && currectDirection != Direction.UP){
-                    if (timeline != null){
-                        timeline.stop();
-                    }
-                    currectDirection = Direction.DOWN;
-                    KeyFrame key = new KeyFrame(Duration.millis(50), event2 -> {
-                        snake.setCenterY(snake.getCenterY() + STEP);
-                        currentPosX = (int) snake.getCenterX();
-                        currentPosY = (int) snake.getCenterY();
-                        if (gameOverBeyondBoundary()){
-                            timeline.stop();
-                            Stage closeStage = (Stage) root.getScene().getWindow();
-                            closeStage.close();
-                            openGameOverView();
-                        }
-                    });
-                    timeline = new Timeline(key);
-                    timeline.setCycleCount(Animation.INDEFINITE);
-                    timeline.playFromStart();
-                }
-                else if (code == KeyCode.LEFT && currectDirection != Direction.RIGHT){
-                    if (timeline != null){
-                        timeline.stop();
-                    }
-                    currectDirection = Direction.LEFT;
-                    KeyFrame key = new KeyFrame(Duration.millis(50), event2 -> {
-                        snake.setCenterX(snake.getCenterX() - STEP);
-                        currentPosX = (int) snake.getCenterX();
-                        currentPosY = (int) snake.getCenterY();
-                        if (gameOverBeyondBoundary()){
-                            timeline.stop();
-                            Stage closeStage = (Stage) root.getScene().getWindow();
-                            closeStage.close();
-                            openGameOverView();
-                        }
-                    });
-                    timeline = new Timeline(key);
-                    timeline.setCycleCount(Animation.INDEFINITE);
-                    timeline.playFromStart();
-                }
-                else if (code == KeyCode.RIGHT && currectDirection != Direction.LEFT){
-                    if (timeline != null){
-                        timeline.stop();
-                    }
-                    currectDirection = Direction.RIGHT;
-                    KeyFrame key = new KeyFrame(Duration.millis(50), event2 -> {
-                        snake.setCenterX(snake.getCenterX() + STEP);
-                        currentPosX = (int) snake.getCenterX();
-                        currentPosY = (int) snake.getCenterY();
-                        if (gameOverBeyondBoundary()){
-                            timeline.stop();
-                            Stage closeStage = (Stage) root.getScene().getWindow();
-                            closeStage.close();
-                            openGameOverView();
-                        }
-                    });
-                    timeline = new Timeline(key);
-                    timeline.setCycleCount(Animation.INDEFINITE);
-                    timeline.playFromStart();
-                }
-            });
+            for (int i = 0; i < 4; i++) {
+                snakeBody.add(new Point(X_BOUND / 2,Y_BOUND / 2));
+            }
+            snakeHead = snakeBody.get(0);
+
+            Random random = new Random();
+            food.add(new Point(random.nextInt(X_BOUND),random.nextInt(Y_BOUND)));
+            currentFood = food.get(food.size()-1);
+            gc = cnvGame.getGraphicsContext2D();
+            gc.setFill(RED);
+            gc.fillOval(currentFood.x * CELL_SIZE,currentFood.y * CELL_SIZE,CELL_SIZE - 2,CELL_SIZE - 2);
+
+            currectDirection = Direction.RIGHT;
+
+            timeline = new Timeline(new KeyFrame(Duration.millis(120),event -> run()));
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
         });
 
     }
+    public void keyCommands(){
+        cnvGame.getScene().addEventFilter(KeyEvent.KEY_PRESSED,event -> {
+            KeyCode code = event.getCode();
+            if (code == KeyCode.UP && currectDirection != Direction.DOWN){
+                currectDirection = Direction.UP;
+            }
+            else if (code == KeyCode.DOWN && currectDirection != Direction.UP){
+                currectDirection = Direction.DOWN;
+            }
+            else if (code == KeyCode.RIGHT && currectDirection != Direction.LEFT){
+                currectDirection = Direction.RIGHT;
+            }
+            else if (code == KeyCode.LEFT && currectDirection != Direction.RIGHT){
+                currectDirection = Direction.LEFT;
+            }
+        });
+    }
+    public void run(){
+        newSnake();
+        keyCommands();
+        currentFood = food.get(food.size()-1);
+        gc = cnvGame.getGraphicsContext2D();
+        gc.clearRect(snakeBody.get((snakeBody.size())-1).x * CELL_SIZE,snakeBody.get((snakeBody.size())-1).y * CELL_SIZE,CELL_SIZE,CELL_SIZE);
+        for (int i = snakeBody.size()-1; i >= 1 ; i--) {
+            snakeBody.get(i).x = snakeBody.get(i-1).x;
+            snakeBody.get(i).y = snakeBody.get(i-1).y;
+        }
+        if (currectDirection == Direction.UP){
+            snakeHead.y--;
+        }
+        else if (currectDirection == Direction.DOWN){
+            snakeHead.y++;
+        }
+        else if (currectDirection == Direction.RIGHT){
+            snakeHead.x++;
+        }
+        else if (currectDirection == Direction.LEFT){
+            snakeHead.x--;
+        }
+        if (eatFood()){
+            newFood();
+        }
+        if (gameOverBeyondBoundary() || gameOverByOwnBiting()){
+            timeline.stop();
+            Stage stage = (Stage) cnvGame.getScene().getWindow();
+            stage.close();
+            openGameOverView();
+        }
+    }
     public void rootOnKeyPressed(KeyEvent keyEvent) {
+
     }
     private void newFood(){
         Random random = new Random();
-        food = new Circle(random.nextInt(WIDTH),random.nextInt(HEIGHT),FOOD_RADIUS);
-        food.setFill(RED);
-        root.getChildren().add(food);
+        food.add(new Point(random.nextInt(X_BOUND),random.nextInt(Y_BOUND)));
+        gc = cnvGame.getGraphicsContext2D();
+        gc.setFill(RED);
+        gc.fillOval(food.get(food.size()-1).x * CELL_SIZE,food.get(food.size()-1).y * CELL_SIZE,CELL_SIZE - 2,CELL_SIZE - 2);
     }
 
     private void newSnake(){
-        snake = new Circle(WIDTH / 2, HEIGHT / 2,SNAKE_HEAD);
-        snake.setFill(BLACK);
-        root.getChildren().add(snake);
+        gc = cnvGame.getGraphicsContext2D();
+        gc.setFill(BLACK);
+        gc.fillRect(snakeHead.getX() * CELL_SIZE,snakeHead.getY() * CELL_SIZE,CELL_SIZE-1,CELL_SIZE-1);
+
+        gc.setFill(GREY);
+        for (int i = 1; i < snakeBody.size(); i++) {
+            gc.fillRect(snakeBody.get(i).getX() * CELL_SIZE,snakeBody.get(i).getY() * CELL_SIZE,CELL_SIZE - 1,CELL_SIZE - 1);
+        }
+    }
+    private boolean eatFood(){
+        boolean isEat = false;
+        if ((snakeHead.getX() == currentFood.getX()) && (snakeHead.getY() == currentFood.getY())){
+            isEat = true;
+            snakeBody.add(new Point(-1,-1));
+            score += 10;
+            txtScore.setText("Score : " + score);
+        }
+        return isEat;
     }
     private boolean gameOverBeyondBoundary(){
         boolean gameOver = false;
-        if (currentPosX < 0 || currentPosY < 0 || currentPosX > WIDTH || currentPosY > HEIGHT){
+        if (snakeHead.getX() < 0 || snakeHead.getY() < 0 || snakeHead.getX() > X_BOUND || snakeHead.getY() > Y_BOUND){
             gameOver = true;
+        }
+        return gameOver;
+    }
+    private boolean gameOverByOwnBiting(){
+        boolean gameOver = false;
+        for (int i = 1; i < snakeBody.size(); i++) {
+            if ((snakeHead.x == snakeBody.get(i).x) && (snakeHead.y == snakeBody.get(i).y)){
+                gameOver = true;
+            }
         }
         return gameOver;
     }
@@ -195,6 +187,9 @@ public class NewGameViewController {
             stage.show();
             stage.centerOnScreen();
             stage.setResizable(false);
+
+            GameOverViewController controller = fxmlLoader.getController();
+            controller.getScore(score);
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR,"Unable to load GameOverView.fxml file, try again...!").showAndWait();
             throw new RuntimeException(e);
