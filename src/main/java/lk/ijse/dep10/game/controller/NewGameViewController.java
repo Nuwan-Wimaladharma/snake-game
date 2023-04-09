@@ -17,11 +17,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lk.ijse.dep10.game.db.DBConnection;
 import lk.ijse.dep10.game.util.Direction;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -120,6 +125,7 @@ public class NewGameViewController {
         }
         if (gameOverBeyondBoundary() || gameOverByOwnBiting()){
             timeline.stop();
+            addDataToDatabase();
             Stage stage = (Stage) cnvGame.getScene().getWindow();
             stage.close();
             openGameOverView();
@@ -192,6 +198,33 @@ public class NewGameViewController {
             controller.getScore(score);
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR,"Unable to load GameOverView.fxml file, try again...!").showAndWait();
+            throw new RuntimeException(e);
+        }
+    }
+    private void addDataToDatabase(){
+        Connection connection = DBConnection.getInstance().getConnection();
+        try {
+            PreparedStatement stm1 = connection.prepareStatement("SELECT * FROM Scores WHERE player_name = ?");
+            stm1.setString(1,playerName);
+            ResultSet rst1 = stm1.executeQuery();
+            if (rst1.next()){
+                int playerScore = rst1.getInt("player_score");
+                String playerName1 = rst1.getString("player_name");
+                if (score > playerScore){
+                    PreparedStatement stm2 = connection.prepareStatement("UPDATE Scores SET player_score = ? WHERE player_name = ?");
+                    stm2.setInt(1,score);
+                    stm2.setString(2,playerName1);
+                    stm2.executeUpdate();
+                }
+            }
+            else if (!rst1.next()){
+                PreparedStatement stm3 = connection.prepareStatement("INSERT INTO Scores (player_name,player_score) VALUES (?,?)");
+                stm3.setString(1,playerName);
+                stm3.setInt(2,score);
+                stm3.executeUpdate();
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR,"Unable to load players. try again...!").showAndWait();
             throw new RuntimeException(e);
         }
     }

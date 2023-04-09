@@ -1,0 +1,18 @@
+#btnPlayAgain{
+    -fx-background-color: rgba(0, 128, 0, 0.9);
+    -fx-text-fill: white;
+    -fx-background-radius: 15px;
+}
+#btnPlayAgain:hover{
+    -fx-background-color: rgba(0, 128, 0, 0.7);
+    -fx-cursor: hand;
+}
+#btnQuitGame{
+    -fx-background-color: rgba(255, 0, 0, 0.9);
+    -fx-text-fill: white;
+    -fx-background-radius: 15px;
+}
+#btnQuitGame:hover{
+    -fx-background-color: rgba(255, 0, 0, 0.7);
+    -fx-cursor: hand;
+}
