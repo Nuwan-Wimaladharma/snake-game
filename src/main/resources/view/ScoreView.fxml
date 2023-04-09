@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="478.0" prefWidth="506.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.game.controller.ScoreViewController">
+   <children>
+      <Label alignment="CENTER" layoutX="14.0" layoutY="30.0" prefHeight="36.0" prefWidth="475.0" text="High Scores" textFill="#2302a8" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font name="System Bold Italic" size="30.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tblScores" layoutX="17.0" layoutY="80.0" prefHeight="378.0" prefWidth="466.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="ID" />
+          <TableColumn prefWidth="273.0" text="NAME" />
+            <TableColumn prefWidth="120.0" text="SCORE" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
